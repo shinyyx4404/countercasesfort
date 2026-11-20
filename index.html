@@ -2,112 +2,146 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#101323">
-  <title>Fortnite Box Counter</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#111323">
+  <meta name="description" content="Личный счётчик открытых ящиков Fortnite">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon.svg">
+  <title>FORTNITE • BOX TRACKER</title>
   <style>
-    :root { color-scheme: dark; --bg:#0b0e19; --panel:#151a2b; --muted:#9ba5c3; --blue:#42c8ff; --purple:#9b72ff; }
-    * { box-sizing:border-box }
-    body { margin:0; min-height:100vh; display:grid; place-items:center; padding:24px;
-      font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif; color:#f6f7ff;
-      background:radial-gradient(ellipse at 50% 0%,#222b52 0%,#11172b 38%,var(--bg) 76%); }
-    .app { width:min(100%,430px); }
-    header { display:flex; align-items:center; gap:12px; margin-bottom:28px; }
-    .logo { width:48px;height:48px;border-radius:15px;display:grid;place-items:center;font-size:25px;
-      background:linear-gradient(135deg,#4bd4ff,#805bff);box-shadow:0 8px 28px #4b8cff40; }
-    h1 { font-size:17px; letter-spacing:.12em; margin:0; }
-    .sub { color:var(--muted);font-size:12px;margin-top:4px;letter-spacing:.06em; }
-    .panel { background:linear-gradient(160deg,#1a2035ee,#111626f2); border:1px solid #ffffff12;
-      border-radius:26px;padding:28px 22px;box-shadow:0 24px 70px #0007; }
-    .eyebrow { text-align:center;color:#aab4d3;font-size:11px;letter-spacing:.18em;font-weight:700; }
-    .count { text-align:center;font-size:clamp(76px,22vw,112px);line-height:1.12;font-weight:850;
-      letter-spacing:-.07em;margin:12px 0 4px;text-shadow:0 0 35px #54caff35;font-variant-numeric:tabular-nums; }
-    .caption { text-align:center;color:var(--muted);font-size:12px;letter-spacing:.13em;margin-bottom:26px; }
-    button { font:inherit;cursor:pointer;border:0;color:white;transition:transform .12s,filter .12s; }
-    button:active { transform:scale(.97); }
-    .plus { width:100%;height:104px;border-radius:22px;font-size:46px;font-weight:850;
-      background:linear-gradient(110deg,#22bdf4,#6968ff 62%,#9861ff);
-      box-shadow:0 12px 32px #4b8cff42,inset 0 1px #ffffff55; }
-    .plus:hover { filter:brightness(1.1); }
-    .controls { display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px; }
-    .secondary { height:48px;border-radius:14px;background:#ffffff0b;border:1px solid #ffffff17;color:#dce4ff;font-weight:650; }
-    .secondary:hover { background:#ffffff14; }
-    .stats { display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px; }
-    .stat { background:#ffffff08;border:1px solid #ffffff10;border-radius:18px;padding:16px; }
-    .stat-label { color:var(--muted);font-size:10px;letter-spacing:.12em;font-weight:700; }
-    .stat-value { font-size:25px;font-weight:800;margin-top:8px;font-variant-numeric:tabular-nums; }
-    .reset { display:block;margin:22px auto 0;background:transparent;color:#9ba5c3;font-size:12px;text-decoration:underline;text-underline-offset:4px; }
-    footer { text-align:center;color:#727d9d;font-size:11px;margin-top:18px; }
-    .toast { position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:#242c45;
-      padding:10px 16px;border-radius:12px;font-size:13px;opacity:0;pointer-events:none;transition:opacity .2s; }
-    .toast.show { opacity:1; }
+    :root{color-scheme:dark;--bg:#0b0d18;--panel:#171a2b;--muted:#929bb7;--cyan:#5be1ff;--violet:#9c79ff;--line:#ffffff14}
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100svh;padding:26px 18px 34px;display:flex;justify-content:center;align-items:center;
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:#f7f8ff;overflow-x:hidden;
+      background:radial-gradient(ellipse at 50% -15%,#3a3470 0%,#1a2040 28%,#0b0d18 70%)}
+    body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.16;background-image:linear-gradient(#ffffff09 1px,transparent 1px),linear-gradient(90deg,#ffffff09 1px,transparent 1px);background-size:34px 34px;mask-image:linear-gradient(to bottom,black,transparent 80%)}
+    .app{width:min(100%,440px);position:relative}
+    .top{display:flex;justify-content:space-between;align-items:center;margin:0 2px 22px}
+    .brand{display:flex;align-items:center;gap:11px}
+    .brand-mark{width:43px;height:43px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(145deg,#5ce5ff,#7c65ff);box-shadow:0 8px 30px #6d83ff55;color:#101426;font-size:22px}
+    .brand-name{font-size:13px;font-weight:900;letter-spacing:.14em}
+    .brand-sub{font-size:10px;color:#a5afce;letter-spacing:.15em;margin-top:4px}
+    .live{font-size:10px;letter-spacing:.12em;color:#9decc8;background:#3bdc9b12;border:1px solid #3bdc9b35;padding:8px 10px;border-radius:99px}
+    .live:before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:#5de5a8;margin:0 7px 1px 0;box-shadow:0 0 9px #5de5a8}
+    .hero{position:relative;border:1px solid #a8b7ff22;border-radius:30px;padding:24px 20px 20px;overflow:hidden;
+      background:linear-gradient(155deg,#252a49ee 0%,#171b30f7 48%,#121626f7 100%);box-shadow:0 28px 80px #0008,inset 0 1px #ffffff12}
+    .hero:before{content:"";position:absolute;width:270px;height:270px;border-radius:50%;right:-100px;top:-135px;background:#806dff25;filter:blur(5px)}
+    .hero:after{content:"";position:absolute;width:220px;height:220px;border-radius:50%;left:-150px;top:170px;background:#39d9ff12;filter:blur(4px)}
+    .hero>*{position:relative;z-index:1}
+    .section-tag{text-align:center;color:#aab4d2;font-size:10px;font-weight:800;letter-spacing:.22em}
+    .chest-wrap{height:178px;display:grid;place-items:center;margin:8px 0 2px;position:relative}
+    .chest-glow{position:absolute;width:180px;height:80px;bottom:17px;border-radius:50%;background:#f5b83c38;filter:blur(27px)}
+    .chest{width:194px;height:154px;filter:drop-shadow(0 15px 18px #0008);overflow:visible}
+    .chest .shine{animation:shine 3.2s ease-in-out infinite;transform-origin:center}
+    @keyframes shine{0%,100%{opacity:.45}50%{opacity:1}}
+    .count-label{text-align:center;color:#aab4d2;font-size:11px;letter-spacing:.19em;font-weight:800;margin-top:4px}
+    .count{font-size:clamp(76px,22vw,104px);font-weight:950;letter-spacing:-.075em;line-height:1.05;text-align:center;margin:4px 0 20px;
+      font-variant-numeric:tabular-nums;background:linear-gradient(180deg,#fff 25%,#b9d9ff 100%);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:0 10px 35px #7bcfff18}
+    button{font:inherit;color:inherit;cursor:pointer;border:0;transition:transform .13s,filter .13s,background .13s}
+    button:active{transform:scale(.975)}
+    .add{width:100%;height:76px;border-radius:19px;font-size:27px;font-weight:950;letter-spacing:.04em;color:#101427;
+      background:linear-gradient(105deg,#62e5ff 0%,#8cb6ff 48%,#b28aff 100%);box-shadow:0 12px 28px #688dff38,inset 0 1px #ffffffb0;position:relative;overflow:hidden}
+    .add:after{content:"";position:absolute;top:-60%;left:-30%;width:30%;height:220%;transform:rotate(25deg);background:#ffffff45;filter:blur(10px);transition:left .4s}
+    .add:hover:after{left:120%}
+    .add span{font-size:12px;display:block;letter-spacing:.18em;margin-top:2px;font-weight:800;opacity:.7}
+    .actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:11px}
+    .small{height:47px;border-radius:14px;background:#ffffff09;border:1px solid #ffffff18;color:#dce4ff;font-size:12px;font-weight:750}
+    .small:hover{background:#ffffff13}
+    .stats{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:15px}
+    .stat{padding:15px 16px;border-radius:17px;background:#0c1020a8;border:1px solid #ffffff12}
+    .stat-title{font-size:9px;letter-spacing:.16em;color:#929dbd;font-weight:850}
+    .stat-num{font-size:25px;font-weight:900;letter-spacing:-.04em;margin-top:7px;font-variant-numeric:tabular-nums}
+    .bottom{display:flex;justify-content:space-between;align-items:center;margin:18px 3px 0}
+    .reset{background:transparent;color:#929bb7;font-size:11px;text-decoration:underline;text-underline-offset:4px;padding:8px 0}
+    .save-note{font-size:10px;color:#77819e}
+    .install{display:none;width:100%;height:47px;margin-top:14px;border-radius:14px;background:#ffffff0b;border:1px solid #ffffff1d;color:#dce4ff;font-weight:750;font-size:12px}
+    .install.show{display:block}
+    .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));transform:translate(-50%,12px);opacity:0;pointer-events:none;background:#272e4b;border:1px solid #ffffff20;padding:11px 16px;border-radius:13px;font-size:12px;box-shadow:0 10px 30px #0008;transition:.2s;white-space:nowrap;z-index:5}
+    .toast.show{opacity:1;transform:translate(-50%,0)}
+    @media(max-height:760px){body{align-items:flex-start}.hero{padding-top:18px}.chest-wrap{height:140px}.chest{width:165px;height:132px}.count{margin-bottom:14px}.add{height:68px}}
   </style>
 </head>
 <body>
-  <main class="app">
-    <header>
-      <div class="logo" aria-hidden="true">🎁</div>
-      <div><h1>FORTNITE BOX COUNTER</h1><div class="sub">МОЙ ЛИЧНЫЙ СЧЁТЧИК</div></div>
-    </header>
-    <section class="panel" aria-label="Счётчик ящиков">
-      <div class="eyebrow">ТВОЙ ПРОГРЕСС</div>
-      <div class="count" id="count" aria-live="polite">0</div>
-      <div class="caption">ОТКРЫТО ЯЩИКОВ</div>
-      <button class="plus" id="add" aria-label="Добавить один ящик">+1</button>
-      <div class="controls">
-        <button class="secondary" id="minus">−1  Убрать</button>
-        <button class="secondary" id="undo">↶  Отменить</button>
-      </div>
-      <div class="stats">
-        <div class="stat"><div class="stat-label">ВСЕГО ОТКРЫТО</div><div class="stat-value" id="total">0</div></div>
-        <div class="stat"><div class="stat-label">СЕГОДНЯ</div><div class="stat-value" id="today">0</div></div>
-      </div>
+<main class="app">
+  <header class="top">
+    <div class="brand">
+      <div class="brand-mark">✦</div>
+      <div><div class="brand-name">BOX TRACKER</div><div class="brand-sub">FORTNITE • PERSONAL STATS</div></div>
+    </div>
+    <div class="live">LOCAL SAVE</div>
+  </header>
+  <section class="hero">
+    <div class="section-tag">ТВОЯ КОЛЛЕКЦИЯ</div>
+    <div class="chest-wrap" aria-hidden="true">
+      <div class="chest-glow"></div>
+      <svg class="chest" viewBox="0 0 240 190" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="lid" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffe18a"/><stop offset=".48" stop-color="#d99536"/><stop offset="1" stop-color="#8c4b20"/></linearGradient>
+          <linearGradient id="front" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#e9a94d"/><stop offset="1" stop-color="#9b5427"/></linearGradient>
+          <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff1a5"/><stop offset=".5" stop-color="#f5c44f"/><stop offset="1" stop-color="#bd7628"/></linearGradient>
+          <linearGradient id="side" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#9a5428"/><stop offset="1" stop-color="#60331f"/></linearGradient>
+        </defs>
+        <ellipse cx="120" cy="166" rx="91" ry="13" fill="#050713" opacity=".55"/>
+        <path d="M31 75 Q34 35 73 26 L167 26 Q206 35 209 75 L204 91 L36 91Z" fill="url(#lid)" stroke="#63391e" stroke-width="5"/>
+        <path d="M42 73 Q47 42 77 38 L163 38 Q193 42 198 73Z" fill="#f5c56c" opacity=".55"/>
+        <path d="M25 78 L215 78 L204 103 L36 103Z" fill="#75401f" stroke="#4d2c1c" stroke-width="4"/>
+        <path d="M36 96 L204 96 L198 155 Q196 164 185 164 L55 164 Q44 164 42 155Z" fill="url(#front)" stroke="#63391e" stroke-width="5"/>
+        <path d="M36 103 L54 107 L54 159 L43 154Z" fill="url(#side)" opacity=".8"/>
+        <path d="M204 103 L186 107 L186 159 L198 154Z" fill="#713b20" opacity=".75"/>
+        <path d="M39 113 H201" stroke="#ffd27b" stroke-width="5" opacity=".65"/>
+        <path d="M55 102 V158 M185 102 V158" stroke="#f4c16a" stroke-width="5" opacity=".7"/>
+        <path d="M99 97 H141 V137 Q141 143 135 143 H105 Q99 143 99 137Z" fill="url(#gold)" stroke="#75431f" stroke-width="4"/>
+        <path d="M111 112 Q120 103 129 112 V125 Q120 132 111 125Z" fill="#70401f"/>
+        <circle cx="120" cy="117" r="4" fill="#ffe89a"/>
+        <path d="M60 28 Q76 12 95 20" fill="none" stroke="#fff1b4" stroke-width="5" stroke-linecap="round" class="shine"/>
+        <path d="M181 42 L187 29 M194 53 L209 48" stroke="#fff0b0" stroke-width="4" stroke-linecap="round" class="shine"/>
+        <path d="M21 41 L26 29 L31 41 L43 46 L31 51 L26 63 L21 51 L9 46Z" fill="#b9f5ff" class="shine"/>
+        <path d="M209 15 L213 6 L217 15 L226 19 L217 23 L213 32 L209 23 L200 19Z" fill="#fff0a3" class="shine"/>
+      </svg>
+    </div>
+    <div class="count-label">ОТКРЫТО ЯЩИКОВ</div>
+    <div class="count" id="count" aria-live="polite">0</div>
+    <button class="add" id="add">+1 <span>ЯЩИК ОТКРЫТ</span></button>
+    <div class="actions">
+      <button class="small" id="minus">− Убрать один</button>
+      <button class="small" id="undo">↶ Отменить</button>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="stat-title">ЗА ВСЁ ВРЕМЯ</div><div class="stat-num" id="total">0</div></div>
+      <div class="stat"><div class="stat-title">СЕГОДНЯ</div><div class="stat-num" id="today">0</div></div>
+    </div>
+    <div class="bottom">
       <button class="reset" id="reset">Сбросить статистику</button>
-    </section>
-    <footer>Счётчик сохраняется автоматически на этом устройстве</footer>
-  </main>
-  <div class="toast" id="toast" role="status"></div>
-  <script>
-    const KEY = 'fortnite-box-counter-v1';
-    const todayKey = () => new Date().toLocaleDateString('en-CA');
-    const fresh = () => ({ count: 0, total: 0, today: 0, date: todayKey() });
-    let data;
-    try { data = { ...fresh(), ...JSON.parse(localStorage.getItem(KEY) || '{}') }; }
-    catch { data = fresh(); }
-    if (data.date !== todayKey()) { data.today = 0; data.date = todayKey(); }
-    let previous = null;
-    const $ = id => document.getElementById(id);
-    function save() { localStorage.setItem(KEY, JSON.stringify(data)); render(); }
-    function render() {
-      $('count').textContent = data.count;
-      $('total').textContent = data.total;
-      $('today').textContent = data.today;
-      $('minus').disabled = data.count <= 0;
-      $('minus').style.opacity = data.count <= 0 ? '.45' : '1';
-    }
-    function change(delta) {
-      if (delta < 0 && data.count <= 0) return;
-      previous = { ...data };
-      data.count += delta;
-      if (delta > 0) { data.total += 1; data.today += 1; }
-      else { data.total = Math.max(0, data.total - 1); data.today = Math.max(0, data.today - 1); }
-      save();
-    }
-    function toast(message) {
-      $('toast').textContent = message; $('toast').classList.add('show');
-      clearTimeout(toast.timer); toast.timer = setTimeout(() => $('toast').classList.remove('show'), 1600);
-    }
-    $('add').addEventListener('click', () => change(1));
-    $('minus').addEventListener('click', () => change(-1));
-    $('undo').addEventListener('click', () => {
-      if (!previous) return toast('Пока нечего отменять');
-      data = previous; previous = null; save(); toast('Последнее действие отменено');
-    });
-    $('reset').addEventListener('click', () => {
-      if (!confirm('Точно сбросить весь счётчик и статистику?')) return;
-      previous = { ...data }; data = fresh(); save(); toast('Счётчик сброшен');
-    });
-    render();
-  </script>
+      <div class="save-note">● автосохранение</div>
+    </div>
+  </section>
+  <button class="install" id="install">↓ Установить приложение</button>
+</main>
+<div class="toast" id="toast" role="status"></div>
+<script>
+  const KEY='fortnite-box-counter-v2';
+  const dateKey=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
+  const fresh=()=>({count:0,total:0,today:0,date:dateKey()});
+  let data; try{data={...fresh(),...JSON.parse(localStorage.getItem(KEY)||'{}')}}catch{data=fresh()}
+  if(data.date!==dateKey()){data.today=0;data.date=dateKey()}
+  let previous=null;
+  const $=id=>document.getElementById(id);
+  function render(){$('count').textContent=data.count;$('total').textContent=data.total;$('today').textContent=data.today;$('minus').disabled=data.count<=0;$('minus').style.opacity=data.count<=0?'.4':'1'}
+  function save(){localStorage.setItem(KEY,JSON.stringify(data));render()}
+  function change(n){if(n<0&&data.count<=0)return;previous={...data};data.count+=n;if(n>0){data.total++;data.today++}else{data.total=Math.max(0,data.total-1);data.today=Math.max(0,data.today-1)}save()}
+  function toast(msg){$('toast').textContent=msg;$('toast').classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>$('toast').classList.remove('show'),1500)}
+  $('add').onclick=()=>change(1);$('minus').onclick=()=>change(-1);
+  $('undo').onclick=()=>{if(!previous)return toast('Нечего отменять');data=previous;previous=null;save();toast('Действие отменено')};
+  $('reset').onclick=()=>{if(!confirm('Сбросить весь счётчик?'))return;previous={...data};data=fresh();save();toast('Статистика сброшена')};
+  render();
+
+  let installPrompt;
+  const installButton=$('install');
+  window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installPrompt=e;installButton.classList.add('show')});
+  installButton.addEventListener('click',async()=>{if(!installPrompt){toast('Открой меню браузера и выбери «Установить приложение»');return}installPrompt.prompt();await installPrompt.userChoice;installPrompt=null;installButton.classList.remove('show')});
+  window.addEventListener('appinstalled',()=>{installButton.classList.remove('show');toast('Приложение установлено!')});
+  if('serviceWorker' in navigator && (location.protocol==='https:'||location.hostname==='localhost'))navigator.serviceWorker.register('./sw.js').catch(()=>{});
+</script>
 </body>
 </html>
