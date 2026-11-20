@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101323">
+  <title>Fortnite Box Counter</title>
+  <style>
+    :root { color-scheme: dark; --bg:#0b0e19; --panel:#151a2b; --muted:#9ba5c3; --blue:#42c8ff; --purple:#9b72ff; }
+    * { box-sizing:border-box }
+    body { margin:0; min-height:100vh; display:grid; place-items:center; padding:24px;
+      font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif; color:#f6f7ff;
+      background:radial-gradient(ellipse at 50% 0%,#222b52 0%,#11172b 38%,var(--bg) 76%); }
+    .app { width:min(100%,430px); }
+    header { display:flex; align-items:center; gap:12px; margin-bottom:28px; }
+    .logo { width:48px;height:48px;border-radius:15px;display:grid;place-items:center;font-size:25px;
+      background:linear-gradient(135deg,#4bd4ff,#805bff);box-shadow:0 8px 28px #4b8cff40; }
+    h1 { font-size:17px; letter-spacing:.12em; margin:0; }
+    .sub { color:var(--muted);font-size:12px;margin-top:4px;letter-spacing:.06em; }
+    .panel { background:linear-gradient(160deg,#1a2035ee,#111626f2); border:1px solid #ffffff12;
+      border-radius:26px;padding:28px 22px;box-shadow:0 24px 70px #0007; }
+    .eyebrow { text-align:center;color:#aab4d3;font-size:11px;letter-spacing:.18em;font-weight:700; }
+    .count { text-align:center;font-size:clamp(76px,22vw,112px);line-height:1.12;font-weight:850;
+      letter-spacing:-.07em;margin:12px 0 4px;text-shadow:0 0 35px #54caff35;font-variant-numeric:tabular-nums; }
+    .caption { text-align:center;color:var(--muted);font-size:12px;letter-spacing:.13em;margin-bottom:26px; }
+    button { font:inherit;cursor:pointer;border:0;color:white;transition:transform .12s,filter .12s; }
+    button:active { transform:scale(.97); }
+    .plus { width:100%;height:104px;border-radius:22px;font-size:46px;font-weight:850;
+      background:linear-gradient(110deg,#22bdf4,#6968ff 62%,#9861ff);
+      box-shadow:0 12px 32px #4b8cff42,inset 0 1px #ffffff55; }
+    .plus:hover { filter:brightness(1.1); }
+    .controls { display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px; }
+    .secondary { height:48px;border-radius:14px;background:#ffffff0b;border:1px solid #ffffff17;color:#dce4ff;font-weight:650; }
+    .secondary:hover { background:#ffffff14; }
+    .stats { display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px; }
+    .stat { background:#ffffff08;border:1px solid #ffffff10;border-radius:18px;padding:16px; }
+    .stat-label { color:var(--muted);font-size:10px;letter-spacing:.12em;font-weight:700; }
+    .stat-value { font-size:25px;font-weight:800;margin-top:8px;font-variant-numeric:tabular-nums; }
+    .reset { display:block;margin:22px auto 0;background:transparent;color:#9ba5c3;font-size:12px;text-decoration:underline;text-underline-offset:4px; }
+    footer { text-align:center;color:#727d9d;font-size:11px;margin-top:18px; }
+    .toast { position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:#242c45;
+      padding:10px 16px;border-radius:12px;font-size:13px;opacity:0;pointer-events:none;transition:opacity .2s; }
+    .toast.show { opacity:1; }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header>
+      <div class="logo" aria-hidden="true">🎁</div>
+      <div><h1>FORTNITE BOX COUNTER</h1><div class="sub">МОЙ ЛИЧНЫЙ СЧЁТЧИК</div></div>
+    </header>
+    <section class="panel" aria-label="Счётчик ящиков">
+      <div class="eyebrow">ТВОЙ ПРОГРЕСС</div>
+      <div class="count" id="count" aria-live="polite">0</div>
+      <div class="caption">ОТКРЫТО ЯЩИКОВ</div>
+      <button class="plus" id="add" aria-label="Добавить один ящик">+1</button>
+      <div class="controls">
+        <button class="secondary" id="minus">−1  Убрать</button>
+        <button class="secondary" id="undo">↶  Отменить</button>
+      </div>
+      <div class="stats">
+        <div class="stat"><div class="stat-label">ВСЕГО ОТКРЫТО</div><div class="stat-value" id="total">0</div></div>
+        <div class="stat"><div class="stat-label">СЕГОДНЯ</div><div class="stat-value" id="today">0</div></div>
+      </div>
+      <button class="reset" id="reset">Сбросить статистику</button>
+    </section>
+    <footer>Счётчик сохраняется автоматически на этом устройстве</footer>
+  </main>
+  <div class="toast" id="toast" role="status"></div>
+  <script>
+    const KEY = 'fortnite-box-counter-v1';
+    const todayKey = () => new Date().toLocaleDateString('en-CA');
+    const fresh = () => ({ count: 0, total: 0, today: 0, date: todayKey() });
+    let data;
+    try { data = { ...fresh(), ...JSON.parse(localStorage.getItem(KEY) || '{}') }; }
+    catch { data = fresh(); }
+    if (data.date !== todayKey()) { data.today = 0; data.date = todayKey(); }
+    let previous = null;
+    const $ = id => document.getElementById(id);
+    function save() { localStorage.setItem(KEY, JSON.stringify(data)); render(); }
+    function render() {
+      $('count').textContent = data.count;
+      $('total').textContent = data.total;
+      $('today').textContent = data.today;
+      $('minus').disabled = data.count <= 0;
+      $('minus').style.opacity = data.count <= 0 ? '.45' : '1';
+    }
+    function change(delta) {
+      if (delta < 0 && data.count <= 0) return;
+      previous = { ...data };
+      data.count += delta;
+      if (delta > 0) { data.total += 1; data.today += 1; }
+      else { data.total = Math.max(0, data.total - 1); data.today = Math.max(0, data.today - 1); }
+      save();
+    }
+    function toast(message) {
+      $('toast').textContent = message; $('toast').classList.add('show');
+      clearTimeout(toast.timer); toast.timer = setTimeout(() => $('toast').classList.remove('show'), 1600);
+    }
+    $('add').addEventListener('click', () => change(1));
+    $('minus').addEventListener('click', () => change(-1));
+    $('undo').addEventListener('click', () => {
+      if (!previous) return toast('Пока нечего отменять');
+      data = previous; previous = null; save(); toast('Последнее действие отменено');
+    });
+    $('reset').addEventListener('click', () => {
+      if (!confirm('Точно сбросить весь счётчик и статистику?')) return;
+      previous = { ...data }; data = fresh(); save(); toast('Счётчик сброшен');
+    });
+    render();
+  </script>
+</body>
+</html>
